@@ -1,5 +1,8 @@
-import { createSlice, fetchBaseQuery } from "@reduxjs/toolkit";
-import {setCredentails,logOut} from '../../features/auth/authSlice'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { logOut, setCredential } from '../../features/auth/authSlice';
+
+
+
 
 
 const baseQuery=fetchBaseQuery({
@@ -26,7 +29,7 @@ const baseQueryWithReauth=async(args,api,extraOptions)=>{
         if(refreshResult?.data){
             const user =api.getState().auth.user
             //store the ne token
-            api.dispatch(setCredentails({...refreshResult.data,user}))
+            api.dispatch(setCredential({...refreshResult.data,user}))
             //retry the original query with new access token
             result=await baseQuery(args,api,extraOptions)
         }else{
@@ -38,7 +41,7 @@ const baseQueryWithReauth=async(args,api,extraOptions)=>{
 
 
 
-export const apiSlice=createAPi({
+export const apiSlice= createApi ({
     baseQuery:baseQueryWithReauth,
     endpoints:builder=>({})
 })
